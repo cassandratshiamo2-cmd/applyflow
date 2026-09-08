@@ -1,0 +1,17 @@
+{
+  "name": "applyflow",
+  "version": "1.0.0",
+  "description": "ApplyTrack is a professional full-stack web application designed for students, graduates, and job seekers to organize and track their internship and job applications, interviews, and overall progress.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

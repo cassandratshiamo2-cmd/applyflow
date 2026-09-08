@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(uuid())
+  name         String
+  email        String         @unique
+  passwordHash String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  applications Application[]
+  notifications Notification[]
+}
+
+model Application {
+  id               String    @id @default(uuid())
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName      String
+  jobTitle         String
+  applicationType  ApplicationType
+  dateApplied      DateTime
+  status           ApplicationStatus
+  location         String?
+  workArrangement  WorkArrangement?
+  jobDescription   String?   @db.Text
+  applicationUrl   String?
+  salaryOrStipend  String?
+  contactPerson    String?
+  contactEmail     String?
+  notes            String?   @db.Text
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  interviews       Interview[]
+
+  @@index([userId])
+}
+
+model Interview {
+  id              String       @id @default(uuid())
+  applicationId  String
+  application     Application  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  interviewDate   DateTime
+  interviewTime   String
+  interviewType   InterviewType
+  locationOrLink  String?
+  notes           String?      @db.Text
+  status          InterviewStatus @default(Upcoming)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([applicationId])
+}
+
+model Notification {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationId   String?
+  type            NotificationType
+  title           String
+  message         String
+  scheduledFor    DateTime?
+  isRead          Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+
+  @@index([userId])
+}
+
+enum ApplicationType {
+  Internship
+  WIL
+  GraduateJob
+  FullTimeJob
+}
+
+enum ApplicationStatus {
+  Saved
+  Applied
+  Assessment
+  Shortlisted
+  Interview
+  Offer
+  Rejected
+  Withdrawn
+}
+
+enum WorkArrangement {
+  Remote
+  Hybrid
+  Onsite
+}
+
+enum InterviewType {
+  Phone
+  Video
+  InPerson
+  Technical
+  Panel
+  Other
+}
+
+enum InterviewStatus {
+  Upcoming
+  Completed
+  Cancelled
+}
+
+enum NotificationType {
+  InterviewReminder
+  FollowUpReminder
+  StatusUpdate
+  General
+}
