@@ -11,3 +11,4 @@ build/
 *.log
 coverage/
 .vercel/
+node_modules

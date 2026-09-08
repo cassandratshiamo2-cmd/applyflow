@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ApplyTrack - Internship & Job Application Tracker
 
 ApplyTrack is a professional full-stack web application designed for students, graduates, and job seekers to organize and track their internship and job applications, interviews, and overall progress.
@@ -93,3 +94,6 @@ npm test
 
 ## 📝 License
 MIT
+=======
+# applyflow
+>>>>>>> bc1d605c2117ae87575e9633a2a42cc91bd0d051
