@@ -1,67 +1,77 @@
-"use client";
+'use client';
 
-import {
+import React, {
   createContext,
   useContext,
-  useEffect,
   useState,
-  ReactNode,
-} from "react";
+  useEffect,
+} from 'react';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+import { User } from '@/types';
+import { api } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
-  loading: boolean;
   login: (token: string, user: User) => void;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const router = useRouter();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("applytrack_user");
-    const storedToken = localStorage.getItem("applytrack_token");
+    async function loadUser() {
+      const token = localStorage.getItem('applytrack_token');
 
-    if (storedUser && storedToken) {
-      try {
-        setUser(JSON.parse(storedUser));
-        setToken(storedToken);
-      } catch {
-        localStorage.removeItem("applytrack_user");
-        localStorage.removeItem("applytrack_token");
+      if (token) {
+        try {
+          const response = await api.auth.me();
+          setUser(response.data);
+        } catch (error) {
+          console.error('Failed to load user:', error);
+          localStorage.removeItem('applytrack_token');
+          setUser(null);
+        }
       }
+
+      setIsLoading(false);
     }
 
-    setLoading(false);
+    loadUser();
   }, []);
 
-  const login = (authToken: string, userData: User) => {
-    setUser(userData);
-    setToken(authToken);
-    localStorage.setItem("applytrack_user", JSON.stringify(userData));
-    localStorage.setItem("applytrack_token", authToken);
+  const login = (token: string, user: User) => {
+    localStorage.setItem('applytrack_token', token);
+    setUser(user);
+    router.push('/dashboard');
   };
 
   const logout = () => {
+    localStorage.removeItem('applytrack_token');
     setUser(null);
-    setToken(null);
-    localStorage.removeItem("applytrack_user");
-    localStorage.removeItem("applytrack_token");
+    router.push('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        isLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -70,8 +80,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
 
-  if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
   }
 
   return context;

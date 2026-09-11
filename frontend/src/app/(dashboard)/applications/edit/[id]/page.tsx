@@ -33,9 +33,20 @@ export default function EditApplicationPage() {
         const response = await api.applications.getOne(params.id as string);
         const app = response.data;
         setFormData({
-          ...app,
-          dateApplied: app.dateApplied.split('T')[0],
-        });
+  companyName: app.companyName,
+  jobTitle: app.jobTitle,
+  applicationType: app.applicationType,
+  dateApplied: app.dateApplied.split('T')[0],
+  status: app.status,
+  location: app.location || '',
+  workArrangement: app.workArrangement || 'Onsite',
+  jobDescription: app.jobDescription || '',
+  applicationUrl: app.applicationUrl || '',
+  salaryOrStipend: app.salaryOrStipend || '',
+  contactPerson: app.contactPerson || '',
+  contactEmail: app.contactEmail || '',
+  notes: app.notes || '',
+});
       } catch (err: any) {
         setError(err.message || 'Failed to load application');
       } finally {
