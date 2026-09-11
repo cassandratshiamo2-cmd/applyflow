@@ -1,7 +1,7 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('applytrack_token');
   const headers = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
