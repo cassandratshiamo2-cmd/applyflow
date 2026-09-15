@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
-import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
@@ -14,7 +13,6 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,7 +21,7 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      const response = await api.auth.register(formData);
+      await api.auth.register(formData);
       // After registration, we might want to auto-login or redirect to login.
       // The prompt says "Login" is a separate step, but UX is better if we auto-login.
       // However, the backend doesn't return a token on register.

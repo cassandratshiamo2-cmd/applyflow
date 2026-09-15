@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS "Notification" (
 CREATE INDEX IF NOT EXISTS "Application_userId_idx" ON "Application"("userId");
 CREATE INDEX IF NOT EXISTS "Interview_applicationId_idx" ON "Interview"("applicationId");
 CREATE INDEX IF NOT EXISTS "Notification_userId_idx" ON "Notification"("userId");
+CREATE INDEX IF NOT EXISTS "Notification_userId_isRead_createdAt_idx" ON "Notification"("userId", "isRead", "createdAt");
 
 -- 7. Triggers for updatedAt
 CREATE OR REPLACE FUNCTION update_modified_column()

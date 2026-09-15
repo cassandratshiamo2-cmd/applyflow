@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
-import { Application, ApplicationStatus, ApplicationType, WorkArrangement } from '@/types';
+import { Application, ApplicationStatus } from '@/types';
 import Link from 'next/link';
 
 export default function ApplicationsPage() {

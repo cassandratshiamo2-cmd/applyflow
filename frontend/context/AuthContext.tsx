@@ -49,7 +49,7 @@ export function AuthProvider({
     }
 
     loadUser();
-  }, []);
+  }, [router]);
 
   const login = (token: string, user: User) => {
     localStorage.setItem('applytrack_token', token);

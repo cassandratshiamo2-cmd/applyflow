@@ -18,17 +18,17 @@ export function Sidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <aside className="w-64 bg-gray-900 text-white flex flex-col h-screen sticky top-0">
-      <div className="p-6">
+    <aside className="sticky top-0 z-10 flex h-auto w-full shrink-0 flex-col bg-gray-900 text-white md:h-screen md:w-64">
+      <div className="p-4 sm:p-6">
         <div className="text-2xl font-bold text-blue-400">ApplyTrack</div>
       </div>
 
-      <nav className="flex-grow px-4 space-y-2">
+      <nav className="flex flex-grow gap-2 overflow-x-auto px-3 pb-3 md:block md:space-y-2 md:overflow-visible md:px-4 md:pb-0">
         {menuItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+            className={`flex shrink-0 items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-colors sm:px-4 sm:py-3 md:text-base ${
               pathname === item.href
                 ? 'bg-blue-600 text-white'
                 : 'text-gray-400 hover:bg-gray-800 hover:text-white'
@@ -40,7 +40,7 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="p-4 border-t border-gray-800">
+      <div className="border-t border-gray-800 p-4">
         <div className="flex items-center space-x-3 px-4 py-3 mb-4">
           <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold">
             {user?.name?.[0]?.toUpperCase() || 'U'}

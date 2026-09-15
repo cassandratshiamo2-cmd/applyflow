@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma';
 import { Interview, InterviewStatus } from '@prisma/client';
+import { notificationService } from './notification.service';
 
 export class InterviewService {
   async createInterview(applicationId: string, userId: string, data: any): Promise<Interview> {
@@ -12,12 +13,24 @@ export class InterviewService {
       throw new Error('Application not found or unauthorized');
     }
 
-    return prisma.interview.create({
+    const interview = await prisma.interview.create({
       data: {
         ...data,
         applicationId,
       },
     });
+
+    if (interview.status === 'Upcoming') {
+      await notificationService.createNotification(userId, {
+        type: 'InterviewReminder',
+        title: `Upcoming ${interview.interviewType} interview`,
+        message: `${application.companyName} - ${application.jobTitle} on ${interview.interviewDate.toLocaleDateString()} at ${interview.interviewTime}${interview.locationOrLink ? ` (${interview.locationOrLink})` : ''}.`,
+        applicationId,
+        scheduledFor: interview.interviewDate,
+      });
+    }
+
+    return interview;
   }
 
   async getInterviews(userId: string) {

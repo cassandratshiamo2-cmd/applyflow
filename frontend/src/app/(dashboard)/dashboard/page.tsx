@@ -6,19 +6,14 @@ import { DashboardStats } from '@/types';
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [trends, setTrends] = useState<Record<string, number> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     async function loadDashboard() {
       try {
-        const [statsRes, trendsRes] = await Promise.all([
-          api.dashboard.getStats(),
-          api.dashboard.getTrends(),
-        ]);
+        const statsRes = await api.dashboard.getStats();
         setStats(statsRes.data);
-        setTrends(trendsRes.data);
       } catch (err: any) {
         setError(err.message || 'Failed to load dashboard data');
       } finally {
